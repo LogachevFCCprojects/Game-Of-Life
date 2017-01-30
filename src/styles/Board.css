@@ -1,0 +1,34 @@
+.controls > a {
+  display: inline-block;
+  margin: .5em;
+  padding: .5em;
+  background-color: #f5fbfe;
+  border: 1px solid #d2edf3;
+  border-radius: 3px;
+}
+
+.controls > a:hover {
+  background-color: #d2edf3;
+}
+  
+.row {
+  margin: 0;
+  padding: 0;
+  display: table;
+}
+.row > div {
+  border-top: 1px solid #d2edf3;
+  border-left: 1px solid #d2edf3;
+  width: 5px;
+  height: 5px;
+  margin: 0;
+  background-color: #f5fbfe;
+  display: table-cell;
+  animation: blinker 1s linear infinite;
+}
+.row > div:last-child {
+  border-right: 1px solid #d2edf3;
+}
+.row:last-child {
+  border-bottom: 1px solid #d2edf3;
+}
