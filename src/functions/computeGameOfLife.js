@@ -3,8 +3,6 @@ import settings from './settings';
 const computeGameOfLife = (immutableList) => {
   let nextBoard = immutableList;
 
-  let neighbours = [];
-
   let countNeighbours = (r, c) => {
     let accumulator = 0,
       tempBoard = immutableList;
@@ -20,13 +18,13 @@ const computeGameOfLife = (immutableList) => {
   }
 
   nextBoard = nextBoard.map((row, r) => row.map((col, c) => {
+    let count = countNeighbours(r, c);
     // save state
-    if ((col === 1) && (countNeighbours(r, c) === 2)) return 1;
-    if ((col === 1) && (countNeighbours(r, c) === 3)) return 1;
+    if ((col === 1) && ((count === 2) || (count === 3))) return 1;
     // die
     if (col === 1) return 0;
     // born
-    if ((col === 0) && (countNeighbours(r, c) === 3)) return 1;
+    if (count === 3) return 1;
     //empty alone
     return 0;
   }));

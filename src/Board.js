@@ -6,7 +6,7 @@ import createEmptyBoard from './functions/createEmptyBoard';
 import randomizeBoard from './functions/randomizeBoard';
 import computeGameOfLife from './functions/computeGameOfLife';
 import settings from './functions/settings';
-
+import perf from './functions/perf';
 
 class Board extends Component {
   state = {
@@ -28,18 +28,20 @@ class Board extends Component {
     }
   }
 
-  componentDidMount() {
-    this.randomizeGame();
-    this.startGame();
-  }
+  // componentDidMount() {
+  //   this.randomizeGame();
+  //   this.startGame();
+  // }
 
   gameLifecycle = () => {
+    perf.start();
     if (this.gameTime.isRunning) {
       this.setState({
         gameboard: computeGameOfLife(this.state.gameboard),
         generations: this.state.generations + 1
       });
     }
+    perf.stop();
   };
 
   startGame = () => {
@@ -48,7 +50,8 @@ class Board extends Component {
 
   pauseGame = () => {
     this.gameTime.stop();
-    this.setState();
+    this.forceUpdate();
+    perf.show();
   };
 
   clearGame = () => {
@@ -76,6 +79,18 @@ class Board extends Component {
     });
   }
 
+  performanceTest = () => {
+    let i = 0;
+    for (; i < 50; i += 1) {
+      perf.start();
+      let x = createEmptyBoard(settings.rows, settings.cols);
+      x = randomizeBoard(x);
+      x = computeGameOfLife(x);
+      perf.stop();
+    }
+    perf.show();
+  };
+
   render() {
     let template = this.state.gameboard.map((row, rowNumber) => {
       let activeStyle = {
@@ -101,6 +116,7 @@ class Board extends Component {
           { this.gameTime.isRunning || <a className="controls__start" onClick={ this.startGame }>Start</a> }
           <a className="controls__clear" onClick={ this.clearGame }>Clear</a>
           <a className="controls__randomize" onClick={ this.randomizeGame }>Randomize</a>
+          <a className="controls__test" onClick={ this.performanceTest }>Perf test</a>
           { this.state.generations && (<span>Generation: { this.state.generations }</span>) }
         </div>
         <div className="board" onClick={ this.gameTime.isRunning ? this.pauseGame : null }>
